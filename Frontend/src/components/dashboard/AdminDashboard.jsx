@@ -28,8 +28,8 @@ const AdminDashboard = () => {
             const token = localStorage.getItem('token');
             if (token === 'mock-admin-token') throw new Error('Mock');
 
-            const usersRes = await fetch('http://localhost:5000/api/admin/users');
-            const logsRes = await fetch('http://localhost:5000/api/admin/logs');
+            const usersRes = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users`);
+            const logsRes = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/logs`);
             const eventsRes = await apiService.getOpportunities();
 
             if (usersRes.ok) setUsers(await usersRes.json());
@@ -69,7 +69,7 @@ const AdminDashboard = () => {
         const newStatus = selectedUser.status === 'Blocked' ? 'Active' : 'Blocked';
 
         try {
-            await fetch(`http://localhost:5000/api/admin/users/${selectedUser._id}/block`, {
+            await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users/${selectedUser._id}/block`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus, reason: blockReason })

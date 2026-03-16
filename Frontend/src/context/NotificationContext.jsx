@@ -21,7 +21,7 @@ export const NotificationProvider = ({ children }) => {
             const userId = payload.id;
 
             // Initialize Socket.IO connection
-            const newSocket = io('http://localhost:5000', {
+            const newSocket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000', {
                 auth: { token }
             });
 
@@ -62,7 +62,7 @@ export const NotificationProvider = ({ children }) => {
     const fetchNotifications = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/notifications', {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/notifications`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setNotifications(response.data.notifications || response.data);
@@ -80,7 +80,7 @@ export const NotificationProvider = ({ children }) => {
         try {
             const token = localStorage.getItem('token');
             await axios.put(
-                `http://localhost:5000/api/notifications/${notificationId}/read`,
+                `${import.meta.env.VITE_API_URL}/api/notifications/${notificationId}/read`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -97,7 +97,7 @@ export const NotificationProvider = ({ children }) => {
         try {
             const token = localStorage.getItem('token');
             await axios.put(
-                'http://localhost:5000/api/notifications/read-all',
+                `${import.meta.env.VITE_API_URL}/api/notifications/read-all`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );

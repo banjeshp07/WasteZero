@@ -82,7 +82,7 @@ const MessagingPage = () => {
         try {
             const decoded = JSON.parse(atob(token.split('.')[1]));
             const myId = decoded.id;
-            const res = await axios.get('http://localhost:5000/api/chat', {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/chat`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const formattedChats = res.data.map(chat => {
@@ -103,7 +103,7 @@ const MessagingPage = () => {
     const fetchCoPartners = async (token) => {
         setCoPartnersLoading(true);
         try {
-            const res = await axios.get('http://localhost:5000/api/opportunities/co-partners', {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/opportunities/co-partners`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setCoPartners(res.data);
@@ -120,7 +120,7 @@ const MessagingPage = () => {
         socketService.joinRoom(chat.id);
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/chat/${chat.id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/chat/${chat.id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const history = res.data.map(m => ({
@@ -143,7 +143,7 @@ const MessagingPage = () => {
         };
         try {
             socketService.sendMessage({ ...messageData, from: currentUserId, to: activeChat.receiverId });
-            await axios.post('http://localhost:5000/api/chat/send', messageData, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/chat/send`, messageData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessages(prev => ({
@@ -159,7 +159,7 @@ const MessagingPage = () => {
         try {
             const token = localStorage.getItem('token');
             const res = await axios.post(
-                'http://localhost:5000/api/chat',
+                `${import.meta.env.VITE_API_URL}/api/chat`,
                 { participantId: partner._id },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

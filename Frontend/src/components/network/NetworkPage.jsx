@@ -28,8 +28,8 @@ const NetworkPage = () => {
         try {
             setLoading(true);
             const [usersRes, connectionsRes] = await Promise.all([
-                axios.get(`http://localhost:5000/api/users?currentUserId=${userId}`),
-                axios.get('http://localhost:5000/api/connections/status', {
+                axios.get(`${import.meta.env.VITE_API_URL}/api/users?currentUserId=${userId}`),
+                axios.get(`${import.meta.env.VITE_API_URL}/api/connections/status`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
             ]);
@@ -65,7 +65,7 @@ const NetworkPage = () => {
     const handleConnect = async (userId) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:5000/api/connections/request', {
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/connections/request`, {
                 toId: userId
             }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -88,7 +88,7 @@ const NetworkPage = () => {
 
             if (!connection) return;
 
-            await axios.post('http://localhost:5000/api/connections/accept', {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/connections/accept`, {
                 connectionId: connection._id
             }, {
                 headers: { Authorization: `Bearer ${token}` }
