@@ -114,7 +114,7 @@ const OpportunityForm = () => {
                 {/* Character Removed */}
 
                 {/* Reuse Register Card Panel */}
-                <div className="register-card-panel" style={{ minHeight: 'auto', width: '500px' }}>
+                <div className="register-card-panel" style={{ minHeight: 'auto', width: '100%', maxWidth: '520px' }}>
 
                     <div className="register-container">
                         <div className="register-header">
@@ -139,7 +139,7 @@ const OpportunityForm = () => {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            <div className="grid-two-col">
                                 <div className="form-group">
                                     <div className="input-with-icon">
                                         <FaCalendarAlt className="input-icon" />

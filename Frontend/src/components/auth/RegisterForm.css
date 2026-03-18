@@ -97,6 +97,20 @@
     font-weight: 700;
 }
 
+/* ===== Grid Helpers ===== */
+
+.grid-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+@media (max-width: 600px) {
+    .grid-two-col {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ===== Skills Checkbox Styling ===== */
 
 .skills-grid {
