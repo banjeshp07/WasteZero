@@ -4,9 +4,11 @@ import apiService from '../../services/apiService';
 import { Link, useNavigate } from 'react-router-dom';
 import NGONotificationBell from '../notifications/NGONotificationBell';
 import MatchResultsModal from './MatchResultsModal';
+import { useToast } from '../ui/ToastContext';
 
 const NGODashboard = () => {
     const navigate = useNavigate();
+    const toast = useToast();
     const [events, setEvents] = useState([]);
     const [pendingApplications, setPendingApplications] = useState([]);
     const [matchModalOpen, setMatchModalOpen] = useState(false);
@@ -51,7 +53,7 @@ const NGODashboard = () => {
                 setEvents(response.data);
             } catch (error) {
                 console.error("Error deleting event:", error);
-                alert("Failed to delete event");
+                toast.error("Failed to delete event");
             }
         }
     };
@@ -80,10 +82,10 @@ const NGODashboard = () => {
                 }
             });
             setPendingApplications(allApplications);
-            alert(`Application ${status} successfully`);
+            toast.success(`Application ${status} successfully`);
         } catch (error) {
             console.error(`Error updating application status:`, error);
-            alert("Failed to update status");
+            toast.error("Failed to update status");
         }
     };
 
@@ -117,13 +119,13 @@ const NGODashboard = () => {
 
             if (error.response) {
                 // Server responded with error
-                alert(`Failed to find matches: ${error.response.data.message || error.response.statusText}`);
+                toast.error(`Failed to find matches: ${error.response.data.message || error.response.statusText}`);
             } else if (error.request) {
                 // Request made but no response
-                alert("Failed to find matches: No response from server. Please check if the backend is running.");
+                toast.error("Failed to find matches: No response from server. Please check if the backend is running.");
             } else {
                 // Something else happened
-                alert(`Failed to find matches: ${error.message}`);
+                toast.error(`Failed to find matches: ${error.message}`);
             }
         }
     };
@@ -131,7 +133,7 @@ const NGODashboard = () => {
     const handleSendInvitations = (selectedVolunteers) => {
         // Placeholder for future invitation system
         console.log("Sending invitations to:", selectedVolunteers);
-        alert(`Invitations sent to ${selectedVolunteers.length} volunteer(s)!`);
+        toast.success(`Invitations sent to ${selectedVolunteers.length} volunteer(s)!`);
         setMatchModalOpen(false);
     };
 

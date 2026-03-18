@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '../ui/ToastContext';
 import './RegisterForm.css';
 
 const volunteerSkills = [
@@ -17,6 +18,7 @@ const volunteerSkills = [
 
 const RegisterForm = () => {
     const navigate = useNavigate();
+    const toast = useToast();
     const [formData, setFormData] = useState({
         username: '',
         role: '',
@@ -83,7 +85,7 @@ const RegisterForm = () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert('Registration successful!');
+                toast.success('Registration successful!');
                 navigate('/');
             } else {
                 setError(data.message || 'Registration failed');

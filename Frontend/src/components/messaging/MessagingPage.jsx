@@ -15,6 +15,9 @@ const MessagingPage = () => {
     const [coPartners, setCoPartners] = useState([]);    // list from API
     const [coPartnersLoading, setCoPartnersLoading] = useState(true);
 
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [isChatOpen, setIsChatOpen] = useState(false);
+
     // ── Auth + socket setup ──────────────────────────────────────────────────
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -77,6 +80,20 @@ const MessagingPage = () => {
         return () => socketService.offReceiveMessage();
     }, [currentUserId]);
 
+    // Track mobile view for responsive layout
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     // ── API: fetch inbox (existing chats) ───────────────────────────────────
     const fetchInbox = async (token) => {
         try {
@@ -118,6 +135,9 @@ const MessagingPage = () => {
     const handleSelectChat = async (chat) => {
         setActiveChat(chat);
         socketService.joinRoom(chat.id);
+        if (isMobile) {
+            setIsChatOpen(true);
+        }
         try {
             const token = localStorage.getItem('token');
             const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/chat/${chat.id}`, {
@@ -169,6 +189,11 @@ const MessagingPage = () => {
                 name: partner.username,
                 receiverId: partner._id
             });
+
+            // Auto-open chat on mobile
+            if (isMobile) {
+                setIsChatOpen(true);
+            }
         } catch (err) { console.error('Start chat error:', err); }
     };
 
@@ -185,6 +210,14 @@ const MessagingPage = () => {
                     <h2 className="page-title">Messaging</h2>
                 </div>
                 <div className="nav-info">
+                    {isMobile && (
+                        <button
+                            className="mobile-chat-toggle"
+                            onClick={() => setIsChatOpen(prev => !prev)}
+                        >
+                            {isChatOpen ? 'Show Chats' : 'Show Chat'}
+                        </button>
+                    )}
                     <span className="nav-badge">🔒 Event co-partners only</span>
                 </div>
             </div>
@@ -192,73 +225,79 @@ const MessagingPage = () => {
             <div className="messaging-main-layout">
 
                 {/* Left: Inbox sidebar */}
-                <ChatList
-                    chats={chats}
-                    activeChat={activeChat}
-                    onSelectChat={handleSelectChat}
-                />
+                {(!isMobile || !isChatOpen) && (
+                    <ChatList
+                        chats={chats}
+                        activeChat={activeChat}
+                        onSelectChat={handleSelectChat}
+                    />
+                )}
 
                 {/* Centre: Chat window */}
-                <ChatWindow
-                    chat={activeChat}
-                    messages={activeChat ? (messages[activeChat.id] || []) : []}
-                    onSendMessage={handleSendMessage}
-                    currentUserId={currentUserId}
-                    onlineUsers={onlineUsers}
-                />
+                {(!isMobile || isChatOpen) && (
+                    <ChatWindow
+                        chat={activeChat}
+                        messages={activeChat ? (messages[activeChat.id] || []) : []}
+                        onSendMessage={handleSendMessage}
+                        currentUserId={currentUserId}
+                        onlineUsers={onlineUsers}
+                    />
+                )}
 
                 {/* Right: Co-partners panel */}
-                <div className="co-partners-panel">
-                    <div className="co-partners-header">
-                        <span>👥</span> Event Co-Partners
-                    </div>
+                {!isMobile && (
+                    <div className="co-partners-panel">
+                        <div className="co-partners-header">
+                            <span>👥</span> Event Co-Partners
+                        </div>
 
-                    {coPartnersLoading ? (
-                        <div className="co-partners-loading">Loading contacts…</div>
-                    ) : coPartners.length === 0 ? (
-                        <div className="co-partners-empty">
-                            <div className="empty-icon-sm">🤝</div>
-                            <p>No co-partners yet.</p>
-                            <p className="sub-text">Get accepted into an event to start chatting with your team!</p>
-                        </div>
-                    ) : (
-                        <div className="co-partners-list">
-                            {coPartners.map(partner => (
-                                <div
-                                    key={String(partner._id)}
-                                    className="co-partner-card"
-                                    onClick={() => startChatWithPartner(partner)}
-                                >
-                                    <div className="partner-avatar">
-                                        {partner.username.charAt(0).toUpperCase()}
-                                        <span
-                                            className="online-dot"
-                                            style={{
-                                                backgroundColor: onlineUsers.has(String(partner._id))
-                                                    ? '#4caf50' : '#bbb'
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="partner-info">
-                                        <div className="partner-name">{partner.username}</div>
-                                        <div
-                                            className="partner-role"
-                                            style={{ color: roleColor(partner.role) }}
-                                        >
-                                            {partner.role?.toUpperCase()}
+                        {coPartnersLoading ? (
+                            <div className="co-partners-loading">Loading contacts…</div>
+                        ) : coPartners.length === 0 ? (
+                            <div className="co-partners-empty">
+                                <div className="empty-icon-sm">🤝</div>
+                                <p>No co-partners yet.</p>
+                                <p className="sub-text">Get accepted into an event to start chatting with your team!</p>
+                            </div>
+                        ) : (
+                            <div className="co-partners-list">
+                                {coPartners.map(partner => (
+                                    <div
+                                        key={String(partner._id)}
+                                        className="co-partner-card"
+                                        onClick={() => startChatWithPartner(partner)}
+                                    >
+                                        <div className="partner-avatar">
+                                            {partner.username.charAt(0).toUpperCase()}
+                                            <span
+                                                className="online-dot"
+                                                style={{
+                                                    backgroundColor: onlineUsers.has(String(partner._id))
+                                                        ? '#4caf50' : '#bbb'
+                                                }}
+                                            />
                                         </div>
-                                        <div className="partner-events">
-                                            {partner.events.map((ev, i) => (
-                                                <span key={i} className="event-tag">{ev}</span>
-                                            ))}
+                                        <div className="partner-info">
+                                            <div className="partner-name">{partner.username}</div>
+                                            <div
+                                                className="partner-role"
+                                                style={{ color: roleColor(partner.role) }}
+                                            >
+                                                {partner.role?.toUpperCase()}
+                                            </div>
+                                            <div className="partner-events">
+                                                {partner.events.map((ev, i) => (
+                                                    <span key={i} className="event-tag">{ev}</span>
+                                                ))}
+                                            </div>
                                         </div>
+                                        <button className="chat-btn">💬</button>
                                     </div>
-                                    <button className="chat-btn">💬</button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
 
             </div>
         </div>

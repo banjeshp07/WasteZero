@@ -1,7 +1,9 @@
 import React from 'react';
+import { useToast } from '../ui/ToastContext';
 import './MatchResultsModal.css';
 
 const MatchResultsModal = ({ isOpen, onClose, matches, opportunityTitle, onSendInvitations }) => {
+    const toast = useToast();
     const [selectedVolunteers, setSelectedVolunteers] = React.useState([]);
 
     if (!isOpen) return null;
@@ -18,7 +20,7 @@ const MatchResultsModal = ({ isOpen, onClose, matches, opportunityTitle, onSendI
 
     const handleSendInvitations = () => {
         if (selectedVolunteers.length === 0) {
-            alert('Please select at least one volunteer');
+            toast.error('Please select at least one volunteer');
             return;
         }
         onSendInvitations(selectedVolunteers);

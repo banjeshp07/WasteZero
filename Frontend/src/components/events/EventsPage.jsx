@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import apiService from '../../services/apiService';
 import MatchResultsModal from '../dashboard/MatchResultsModal';
+import { useToast } from '../ui/ToastContext';
 import './EventsPage.css';
 
 const EventsPage = () => {
     const navigate = useNavigate();
+    const toast = useToast();
     const [events, setEvents] = useState([]);
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -80,10 +82,10 @@ const EventsPage = () => {
     const handleApply = async (eventId) => {
         try {
             await apiService.applyForOpportunity(eventId);
-            alert("Application submitted successfully!");
+            toast.success("Application submitted successfully!");
         } catch (error) {
             console.error("Error applying:", error);
-            alert("Failed to apply. You may have already applied for this event.");
+            toast.error("Failed to apply. You may have already applied for this event.");
         }
     };
 
@@ -92,10 +94,10 @@ const EventsPage = () => {
             try {
                 await apiService.deleteOpportunity(eventId);
                 fetchEvents(); // Refresh list
-                alert("Event deleted successfully!");
+                toast.success("Event deleted successfully!");
             } catch (error) {
                 console.error("Error deleting event:", error);
-                alert("Failed to delete event");
+                toast.error("Failed to delete event");
             }
         }
     };
@@ -123,13 +125,13 @@ const EventsPage = () => {
             setMatchModalOpen(true);
         } catch (error) {
             console.error("Error finding matches:", error);
-            alert("Failed to find matches. Please try again.");
+            toast.error("Failed to find matches. Please try again.");
         }
     };
 
     const handleSendInvitations = (selectedVolunteers) => {
         console.log("Sending invitations to:", selectedVolunteers);
-        alert(`Invitations sent to ${selectedVolunteers.length} volunteer(s)!`);
+        toast.success(`Invitations sent to ${selectedVolunteers.length} volunteer(s)!`);
         setMatchModalOpen(false);
     };
 

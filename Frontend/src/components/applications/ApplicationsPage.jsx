@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import apiService from '../../services/apiService';
+import { useToast } from '../ui/ToastContext';
 import './ApplicationsPage.css';
 
 const ApplicationsPage = () => {
+    const toast = useToast();
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [userRole, setUserRole] = useState('');
@@ -60,11 +62,11 @@ const ApplicationsPage = () => {
                 volunteerId,
                 status
             });
-            alert(`Application ${status} successfully!`);
+            toast.success(`Application ${status} successfully!`);
             fetchApplications(); // Refresh list
         } catch (error) {
             console.error("Error updating status:", error);
-            alert("Failed to update application status");
+            toast.error("Failed to update application status");
         }
     };
 

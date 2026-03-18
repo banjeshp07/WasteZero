@@ -101,7 +101,7 @@ const NetworkPage = () => {
             ));
         } catch (err) {
             console.error("Accept failed", err);
-            alert("Failed to accept request");
+            toast.error("Failed to accept request");
         }
     };
 

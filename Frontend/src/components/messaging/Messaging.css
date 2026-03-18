@@ -432,8 +432,9 @@
     font-size: 0.88rem;
 }
 
-.nav-info { display: flex; align-items: center; }
-..nav-badge {
+.nav-info { display: flex; align-items: center; gap: 12px; }
+
+.nav-badge {
     background: #eef2ff;
     color: #4338ca;
     padding: 5px 12px;
@@ -441,6 +442,21 @@
     font-size: 0.8rem;
     font-weight: 600;
     border: 1px solid #c7d2fe;
+}
+
+.mobile-chat-toggle {
+    background: #2196f3;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.mobile-chat-toggle:hover {
+    background: #1976d2;
 }
 
 /* Responsive adjustments for mobile */

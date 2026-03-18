@@ -4,6 +4,7 @@ import AdminNotificationBell from '../notifications/AdminNotificationBell';
 import ReportsPage from '../reports/ReportsPage';
 import './AdminDashboard.css';
 import apiService from '../../services/apiService';
+import { useToast } from '../ui/ToastContext';
 
 const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
@@ -11,6 +12,7 @@ const AdminDashboard = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('dashboard');
+    const toast = useToast();
 
     // Modal state
     const [showModal, setShowModal] = useState(false);
@@ -49,10 +51,10 @@ const AdminDashboard = () => {
             try {
                 await apiService.deleteOpportunity(eventId);
                 setEvents(prev => prev.filter(e => e._id !== eventId));
-                alert("Event deleted successfully.");
+                toast.success("Event deleted successfully.");
             } catch (error) {
                 console.error("Error deleting event:", error);
-                alert("Failed to delete event.");
+                toast.error("Failed to delete event.");
             }
         }
     };
@@ -77,7 +79,7 @@ const AdminDashboard = () => {
             fetchData();
             setShowModal(false);
         } catch (err) {
-            alert('Failed to update user');
+            toast.error('Failed to update user');
         }
     };
 

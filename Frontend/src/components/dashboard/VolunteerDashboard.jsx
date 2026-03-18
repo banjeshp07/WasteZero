@@ -3,8 +3,10 @@ import './Dashboard.css';
 import apiService from '../../services/apiService';
 import { Link } from 'react-router-dom';
 import VolunteerNotificationBell from '../notifications/VolunteerNotificationBell';
+import { useToast } from '../ui/ToastContext';
 
 const VolunteerDashboard = () => {
+    const toast = useToast();
     const [applications, setApplications] = useState([]);
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [stats, setStats] = useState({
@@ -73,11 +75,11 @@ const VolunteerDashboard = () => {
     const handleApply = async (eventId) => {
         try {
             await apiService.applyForOpportunity(eventId);
-            alert("Application submitted successfully!");
+            toast.success("Application submitted successfully!");
             window.location.reload();
         } catch (error) {
             console.error("Error applying:", error);
-            alert(error.response?.data?.message || "Failed to apply");
+            toast.error(error.response?.data?.message || "Failed to apply");
         }
     };
 
