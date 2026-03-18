@@ -447,15 +447,26 @@
 @media (max-width: 1024px) {
     .dashboard-nav {
         padding: 1rem 2rem;
+        flex-wrap: wrap;
+        row-gap: 0.75rem;
     }
 
     .nav-links {
-        gap: 1.5rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .nav-profile {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
     }
 
     .dashboard-content {
         padding: 1.5rem 2rem;
-        padding-top: 5.5rem;
+        padding-top: 6.25rem;
     }
 
     .welcome-section {

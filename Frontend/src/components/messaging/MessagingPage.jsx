@@ -15,7 +15,7 @@ const MessagingPage = () => {
     const [coPartners, setCoPartners] = useState([]);    // list from API
     const [coPartnersLoading, setCoPartnersLoading] = useState(true);
 
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
     const [isChatOpen, setIsChatOpen] = useState(false);
 
     // ── Auth + socket setup ──────────────────────────────────────────────────
@@ -83,7 +83,7 @@ const MessagingPage = () => {
     // Track mobile view for responsive layout
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth <= 768);
+            setIsMobile(window.innerWidth <= 1024);
         };
 
         window.addEventListener('resize', handleResize);
