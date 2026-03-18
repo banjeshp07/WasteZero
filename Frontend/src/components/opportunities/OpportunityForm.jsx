@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import apiService from '../../services/apiService';
 import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useToast } from '../ui/ToastContext';
 import '../layout/RegisterPage.css'; // Reuse RegisterPage layout styles
 import '../auth/RegisterForm.css';   // Reuse Form styles
 
@@ -84,18 +85,22 @@ const OpportunityForm = () => {
         }));
     };
 
+    const toast = useToast();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             if (id) {
                 await apiService.updateOpportunity(id, formData);
+                toast.success('Event updated successfully!');
             } else {
                 await apiService.createOpportunity(formData);
+                toast.success('Event created successfully!');
             }
             navigate('/dashboard');
         } catch (error) {
             console.error('Error saving opportunity:', error);
-            alert('Error saving event. Please try again.');
+            toast.error('Error saving event. Please try again.');
         }
     };
 

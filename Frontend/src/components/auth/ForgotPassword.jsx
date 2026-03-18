@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import SplitCard from '../../components/layout/SplitCard';
 import forgotImg from "../../assets/Error Illustration.jpg";
+import { useToast } from '../../components/ui/ToastContext';
 import './ForgotPassword.css';
 
 const ForgotIllustration = () => {
@@ -82,6 +83,8 @@ const ForgotPasswordForm = () => {
         }
     };
 
+    const toast = useToast();
+
     const handleResetSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -105,7 +108,7 @@ const ForgotPasswordForm = () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert('Password reset successfully!');
+                toast.success('Password reset successfully!');
                 window.location.href = '/';
             } else {
                 setError(data.message || 'Failed to reset password');

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useNotifications } from '../../context/NotificationContext';
+import { useToast } from '../ui/ToastContext';
 import './NetworkPage.css';
 
 const NetworkPage = () => {
@@ -10,6 +11,7 @@ const NetworkPage = () => {
     const [loading, setLoading] = useState(true);
     const [currentUserId, setCurrentUserId] = useState(null);
     const { socket } = useNotifications();
+    const toast = useToast();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -73,7 +75,7 @@ const NetworkPage = () => {
             setConnections(prev => [...prev, res.data]);
         } catch (err) {
             console.error("Connection request failed", err);
-            alert(err.response?.data?.message || "Failed to send connection request");
+            toast.error(err.response?.data?.message || "Failed to send connection request");
         }
     };
 

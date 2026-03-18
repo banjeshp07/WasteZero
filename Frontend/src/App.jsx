@@ -20,13 +20,15 @@ import ApplicationsPage from './components/applications/ApplicationsPage';
 import OpportunityForm from './components/opportunities/OpportunityForm';
 
 import { NotificationProvider } from './context/NotificationContext';
+import { ToastProvider } from './components/ui/ToastContext';
 
 function App() {
   return (
-    <Router>
-      <NotificationProvider>
-        <div className="app-container">
-          <Routes>
+    <ToastProvider>
+      <Router>
+        <NotificationProvider>
+          <div className="app-container">
+            <Routes>
             {/* Login Route */}
             <Route path="/" element={
               <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -61,6 +63,7 @@ function App() {
         </div>
       </NotificationProvider>
     </Router>
+  </ToastProvider>
   );
 }
 
